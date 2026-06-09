@@ -1,0 +1,19 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: payroll-service
+
+payroll:
+  work-days-per-month: 21.75
+  work-hours-per-day: 8
+  seniority-increment-per-year: 100
+  seniority-max: 2000
+  tax-threshold: 5000
+  meal-allowance: 300
+  transport-allowance: 200
+  communication-allowance: 100
+  overtime-max-hours-warning: 36
+  leave-max-days-warning: 10
+  performance-change-threshold: 0.3
