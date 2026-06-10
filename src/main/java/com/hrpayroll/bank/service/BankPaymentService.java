@@ -36,9 +36,6 @@ public class BankPaymentService {
     @Autowired
     private EmployeeService employeeService;
 
-    @Autowired
-    private PayslipService payslipService;
-
     private final ConcurrentHashMap<String, Boolean> generationLocks = new ConcurrentHashMap<>();
 
     public BankPaymentFile generatePaymentFile(String yearMonth, String bankType, String format,
