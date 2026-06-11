@@ -21,7 +21,9 @@ public class PayslipPdfService {
 
     static {
         try {
-            BaseFont bfChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
+            // R3 修复: itext-asian 5.5.13.3 在 Maven Central 已不可用,改用系统 TTF 字体
+            String fontPath = resolveChineseFontPath();
+            BaseFont bfChinese = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             titleFont = new Font(bfChinese, 18, Font.BOLD);
             headerFont = new Font(bfChinese, 12, Font.BOLD);
             normalFont = new Font(bfChinese, 10, Font.NORMAL);
@@ -32,6 +34,23 @@ public class PayslipPdfService {
             normalFont = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
             smallItalicFont = new Font(Font.FontFamily.HELVETICA, 9, Font.ITALIC);
         }
+    }
+
+    private static String resolveChineseFontPath() {
+        // 优先按系统尝试常见中文字体路径
+        String[] candidates = new String[] {
+            "C:/Windows/Fonts/simhei.ttf",
+            "C:/Windows/Fonts/msyh.ttc",
+            "C:/Windows/Fonts/simsun.ttc",
+            "/usr/share/fonts/truetype/wqy/wqy-microhei.ttc",
+            "/System/Library/Fonts/PingFang.ttc"
+        };
+        for (String p : candidates) {
+            try {
+                if (java.nio.file.Files.exists(java.nio.file.Paths.get(p))) return p;
+            } catch (Throwable ignore) {}
+        }
+        return "C:/Windows/Fonts/simhei.ttf";
     }
 
     public byte[] generatePdf(Payslip payslip, String password) {
